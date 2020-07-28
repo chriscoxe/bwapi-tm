@@ -21,4 +21,4 @@ The fields in the state file contain win/loss conditions, timers information, an
 
 Where possible, this tournament module is intended to behave the same way regardless of which version of BWAPI is used. At the time of writing (July 2020), the only difference between BWAPI versions that significantly affects this tournament module is that BWAPI didn't time client (proxy) bots properly in versions prior to 4.4.0. This was due to the internal logic of BWAPI (not this tournament module). So, for client bots that use a version of BWAPI below 4.4.0, this tournament module won't detect them timing out (e.g. individual frames taking too many milliseconds). Only client (proxy) bots are adversely affected though - DLL bots are not adversely affected.
 
-This project is based on the tournament module from https://github.com/davechurchill/StarcraftAITournamentManager, with some features incorporated from https://github.com/basil-ladder/sc-tm.
+This project is based on the tournament module from https://github.com/davechurchill/StarcraftAITournamentManager (MIT license), with some features incorporated from https://github.com/basil-ladder/sc-tm (MIT license).
