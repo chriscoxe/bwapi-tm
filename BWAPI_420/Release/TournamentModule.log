@@ -1,0 +1,8 @@
+﻿  AutoObserver.cpp
+  Dll.cpp
+  TournamentModule.cpp
+     Creating library C:\S.bakYYYYMMDD\GitHub\StarcraftAITournamentManager\src\tournamentmodule\BWAPI_420\Release\TournamentModule.lib and object C:\S.bakYYYYMMDD\GitHub\StarcraftAITournamentManager\src\tournamentmodule\BWAPI_420\Release\TournamentModule.exp
+  Generating code
+  All 2696 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  TournamentModule.vcxproj -> C:\S.bakYYYYMMDD\GitHub\StarcraftAITournamentManager\src\tournamentmodule\BWAPI_420\Release\TournamentModule.dll
