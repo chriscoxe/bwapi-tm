@@ -12,7 +12,7 @@ Ensure that the bwapi-data/TM folder exists for the bot and the human before sta
 
 Remember to ensure SCHNAIL sets "tournament = bwapi-data\TM\TournamentModule.dll" in bwapi.ini for both players, assuming that's where it lives.
 
-The per-frame timeouts option (TM_TIMEOUTS) defaults to the same timeouts settings as AIIDE/CoG. SSCAIT allows more time, i.e. ">= 320 frames longer than 85 milliseconds" rather than ">= 320 frames longer than 55 milliseconds". PurpleWave times out a lot using the defaults. BASIL doesn't use per-frame timeouts, which is why PurpleWave works fine on BASIL. If you want to add a little leeway for users that have slow machines or for bots like PurpleWave, you might want to try something like 85 instead of 55. It's a trade-off between fairness for bot authors vs wasting users' time if bots are too slow most a lot of the time.
+The per-frame timeouts option (TM_TIMEOUTS) defaults to the same timeouts settings as AIIDE/CoG. SSCAIT allows more time, i.e. ">= 320 frames longer than 85 milliseconds" rather than ">= 320 frames longer than 55 milliseconds". PurpleWave times out a lot using the defaults. BASIL doesn't use per-frame timeouts, which is why PurpleWave works fine on BASIL. If you want to add a little leeway for users that have slow machines or for bots like PurpleWave, you might want to try something like 85 instead of 55. It's a trade-off between fairness for bot authors vs wasting users' time if bots are too slow a lot of the time.
 
 I couldn't prevent users from pausing the game, but by default the Tournament Module will immediately resume the game whenever it is paused (if you prefer, this can be disabled via TM_AUTO_RESUME_GAME).
 
