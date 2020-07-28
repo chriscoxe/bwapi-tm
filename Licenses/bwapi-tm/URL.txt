@@ -1,1 +1,1 @@
-https://github.com/chriscoxe/bwapi-tm/blob/master/License.md
+https://github.com/chriscoxe/bwapi-tm/blob/master/Licenses/bwapi-tm/License.md
