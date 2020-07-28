@@ -1,9 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Platforms\Win32\PlatformToolsets\v141_xp\Toolset.targets(39,5): warning MSB8051: Support for targeting Windows XP is deprecated and will not be present in future releases of Visual Studio. Please see https://go.microsoft.com/fwlink/?linkid=2023588 for more information.
-  AutoObserver.cpp
-  Dll.cpp
-  TournamentModule.cpp
-     Creating library C:\S.bakYYYYMMDD\GitHub\StarcraftAITournamentManager\src\tournamentmodule\BWAPI_440\Release\TournamentModule.lib and object C:\S.bakYYYYMMDD\GitHub\StarcraftAITournamentManager\src\tournamentmodule\BWAPI_440\Release\TournamentModule.exp
-  Generating code
-  All 2563 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  TournamentModule.vcxproj -> C:\S.bakYYYYMMDD\GitHub\StarcraftAITournamentManager\src\tournamentmodule\BWAPI_440\Release\TournamentModule.dll
