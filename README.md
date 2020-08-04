@@ -2,7 +2,7 @@
 A tournament module for BWAPI bots. This is useful for operating competitions that run a large-number of bot-vs-bot games. It can also be used to operate human-vs-bot games.
 
 ## State file
-The tournament module updates a state file that the calling system can read or monitor to determine the progress of each game, and may help to adjudicate the winner of each game. By default, the tournament module updates the state file every 5 seconds, given the opportunity.
+The tournament module updates a state file that the calling system can read or monitor to determine the progress of each game, and may help to adjudicate the winner of each game. This file is not intended to be read by bots, because it contains some information about the game state that bots should not be allowed to see under the rules for most competitions, due to e.g. the fog of war. By default, the tournament module updates the state file every 5 seconds, given the opportunity.
 
 The fields in the state file contain win/loss conditions, timers information, and various other information. The number of fields is predictable, but it depends on how many kinds of per-frame timeout the current player is using. See `TMState::write(std::string filename)` in `TournamentModule.cpp` to see the list of fields. Some fields are described in the `README.md` file in the `Source` folder. Notes:
 * How to determine which player is the winner/loser: see the `README.md` in the `Source` folder. The logic is the same for all BWAPI versions.
@@ -36,18 +36,24 @@ For the record, as-at the time of writing (July 2020), the notable differences c
 State file update period:
 * By default, this tournament module updates the state file every 5 seconds (given the opportunity), instead of every 360 frames. Assuming you use the default options as-is or use your existing StarcraftAITournamentManager settings file as-is, this is the only major difference. If you want to retain the same behavior as StarcraftAITournamentManager, set the `TM_STATE_FILE_UPDATE_TIME_PERIOD` option to `0` and the `TM_STATE_FILE_UPDATE_FRAME_PERIOD` option to `360`.
 
+Some callbacks are now timed:
+* Time `onUnitComplete()` and `onUnitRenegade()` and `onSaveGame()` because they should be timed. FYI, `onUnitComplete()` wasn't being timed due to a typo in the function signature that was introduced in BWAPI 4.0.0 when the function signature changed. Also time `onUnitRenegade()` and `onSaveGame()` just for completeness, because it appears these callbacks had been overlooked when writing the timing logic in the original AIIDE implementation for 3.7.4. Note that `onSaveGame()` is only called after the file has been saved, so it the time taken to save the file is not counted.
+
+Automatically un-pauses (resumes) the game
+* By default, automatically resumes the game whenever it is paused. Can be controlled via the `TM_AUTO_RESUME_GAME` option.
+
 Features:
 * Added a `TM_DISABLE_DRAW_GAME_TIMER` option to display an in-game timer. By default the timer is not displayed. To make the TM display the timer, set this option to `false`, and also ensure that the `TM_DRAW_GUI` option is set to `true`.
 
-Enhancements:
+BWAPI version support:
 * Now supports BWAPI version 3.7.5 (in addition to 4.4.0, 4.2.0, 4.1.2, 3.7.4 that the StarcraftAITournamentManager base already supported).
 
 State file changes:
 * Fixed a bug in the setting of the `gameElapsedTime` field - it was almost always `0`. This field is supposed to be set to the number of milliseconds since the game started (wall clock time).
-* Added a lot of new fields, e.g. booleans for whether each particular kind of timer threshold has been exceeded, some timer details (total, mean, max, min), various scores info, random seed (for trying to reproduce crashes/timeouts etc later).
 * Inserted a version field at the start of the state file (i.e. it's the version of the file format, not the version of the TM), for better future-proofing.
 * Inserted a number-of-timeout-fields field into the state file, so that it is easier to parse the file and count the number of fields to calculate whether the file is incomplete.
-* Added a `randomSeed` field. This information might be useful in some cases to more consistently reproduce crashes/timeouts etc later, via the `seed_override` option in `bwapi.ini` when trying to rerun a game to reproduce the problem. It is only available for BWAPI 4.2.0 and above. In earlier versions of BWAPI it is set to `0`.
+* Appended a lot of new fields, e.g. booleans for whether each particular kind of timer threshold has been exceeded, some timer details (total, mean, max, min), various scores info, random seed (for trying to reproduce crashes/timeouts etc later).
+* There is now a `randomSeed` field. This information might be useful in some cases to more consistently reproduce crashes/timeouts etc later, via the `seed_override` option in `bwapi.ini` when trying to rerun a game to reproduce the problem. It is only available for BWAPI 4.2.0 and above. In earlier versions of BWAPI it is set to `0`.
 
 Options:
 * Added some new options, and documented all options in the sample settings file (`tm_setting.ini`). All the new option names start with `TM_`, although the old-style option names are still recognized from the settings file. If desired, options in the (optional) settings file can be overridden by environment variables with the same name. Also added an optional `TM_SETTINGS_FILE` environment variable for the location to read a settings file from.
@@ -61,7 +67,9 @@ Visual C++ project files:
 * Refactor only: Beautified e.g. tabs to spaces and more consistent indenting.
 
 Tidy-up:
+* Renamed the project from ExampleTournamentModule to TournamentModule and renamed classes ExampleTournamentModule to TM and ExampleTournamentAI to TMAI.
 * Added guards against some potential null pointer exceptions that wouldn't happen during expected usage (`BWAPI::Broodwar->enemy()`).
-* Refactor only: Use `ostringstream` to help avoid delays during updating the state file.
-* Refactor only: Decoupled the auto observer more from the tournament AI class, via `AIModule` callbacks.
+* Use `ostringstream` to help avoid delays during updating the state file.
+* Decoupled the auto observer more from the tournament AI class, via `AIModule` callbacks. AutoObserver is now an AIModule.
 * Refactor only: More consistent variable naming conventions, e.g. no leading underscore for member variables.
+* Refactor only: Use the `override` specifier where appropriate.
