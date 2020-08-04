@@ -30,8 +30,11 @@ Where possible, this tournament module is intended to behave the same way regard
 ## Origin, Licenses and Credits
 This project is based on the tournament module from https://github.com/davechurchill/StarcraftAITournamentManager (MIT license), with some features incorporated from https://github.com/basil-ladder/sc-tm (MIT license). See the `LICENSES` file and the `Licenses` folder. I am very grateful to the authors of those projects, of which my project merely enhances.
 
-## Enhancements
-For the record, as-at the time of writing (July 2020), the notable differences compared with the tournament module from StarcraftAITournamentManager are as follows. Note: if I make further changes, I do not intend to keep keep this list up to date.
+## Differences compared with StarcraftAITournamentManager
+For the record, as-at the time of writing (July 2020), the notable differences compared with the tournament module from StarcraftAITournamentManager are as follows. Note: if I make further changes or if StarcraftAITournamentManager chnages, I do not intend to keep keep this list up to date.
+
+State file update period:
+* By default, this tournament module updates the state file every 5 seconds (given the opportunity), instead of every 360 frames. Assuming you use the default options as-is or use your existing StarcraftAITournamentManager settings file as-is, this is the only major difference. If you want to retain the same behavior as StarcraftAITournamentManager, set the `TM_STATE_FILE_UPDATE_TIME_PERIOD` option to `0` and the `TM_STATE_FILE_UPDATE_FRAME_PERIOD` option to `360`.
 
 Features:
 * Added a `TM_DISABLE_DRAW_GAME_TIMER` option to display an in-game timer. By default the timer is not displayed. To make the TM display the timer, set this option to `false`, and also ensure that the `TM_DRAW_GUI` option is set to `true`.
