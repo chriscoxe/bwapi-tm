@@ -64,12 +64,12 @@ Misc bugfixes:
 Visual C++ project files:
 * Use environment variables such as `BWAPI_420` instead of `BWAPI_DIR` in the Visual C++ project files.
 * Minor clean-up of Visual C++ project files, although this was mainly for the Debug configuration which hasn't been used as far as I know.
-* Refactor only: Beautified e.g. tabs to spaces and more consistent indenting.
 
 Tidy-up:
-* Renamed the project from ExampleTournamentModule to TournamentModule and renamed classes ExampleTournamentModule to TM and ExampleTournamentAI to TMAI.
+* Renamed the project from `ExampleTournamentModule` to `TournamentModule` and renamed classes `ExampleTournamentModule` to `TM` and `ExampleTournamentAI` to `TMAI`.
 * Added guards against some potential null pointer exceptions that wouldn't happen during expected usage (`BWAPI::Broodwar->enemy()`).
 * Use `ostringstream` to help avoid delays during updating the state file.
-* Decoupled the auto observer more from the tournament AI class, via `AIModule` callbacks. AutoObserver is now an AIModule.
+* Decoupled the auto observer more from the tournament AI class, via `AIModule` callbacks. The auto observer is now an `AIModule`.
 * Refactor only: More consistent variable naming conventions, e.g. no leading underscore for member variables.
 * Refactor only: Use the `override` specifier where appropriate.
+* Refactor only: Beautified e.g. tabs to spaces and more consistent indenting.
