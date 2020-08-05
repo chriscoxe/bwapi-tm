@@ -20,7 +20,7 @@ To use this project, be sure to specify the path of this tournament module DLL s
 
 If used, the value of the per-frame timeouts option (`TM_TIMEOUTS`) may need to be tweaked for some bots, depending on how slowly those bot(s) are on the local system's hardware/OS. Some bots might often time out if run on a system that is slower than they were tested on.
 
-Warning: if you have a process that monitors the state file produced by this project, it's possible that the the state file may be written then rewriten shortly afterwards, so if Starcraft is still running, your system should detect and wait a little while & retry, perhaps a few times, to read the file if the file is deleted or shortened or changes etc underneath it.
+Warning: if you have a process that monitors the state file produced by this project, it's possible that the the state file may be written then rewritten shortly afterwards, so if Starcraft is still running, your system should detect and wait a little while & retry, perhaps a few times, to read the file if the file is deleted or shortened or changes etc underneath it.
 
 ## Notes about BWAPI version differences
 Where possible, this tournament module is intended to behave the same way regardless of which version of BWAPI is used. At the time of writing (July 2020), the only differences between BWAPI versions that significantly affects this tournament module are that:
@@ -31,13 +31,13 @@ Where possible, this tournament module is intended to behave the same way regard
 This project is based on the tournament module from https://github.com/davechurchill/StarcraftAITournamentManager (MIT license), with some features incorporated from https://github.com/basil-ladder/sc-tm (MIT license). See the `LICENSES` file and the `Licenses` folder. I am very grateful to the authors of those projects, of which my project merely enhances.
 
 ## Differences compared with StarcraftAITournamentManager
-For the record, as-at the time of writing (July 2020), the notable differences compared with the tournament module from StarcraftAITournamentManager are as follows. Note: if I make further changes or if StarcraftAITournamentManager changes, I do not intend to keep keep this list up to date.
+For the record, as-at the time of writing (July 2020), the notable differences compared with the tournament module from StarcraftAITournamentManager are as follows. Note: if I make further changes or if StarcraftAITournamentManager changes, I do not intend to keep this list up to date.
 
 State file update period:
 * By default, this tournament module updates the state file every 5 seconds (given the opportunity), instead of every 360 frames. Assuming you use the default options as-is or use your existing StarcraftAITournamentManager settings file as-is, this is the only major difference. If you want to retain the same behavior as StarcraftAITournamentManager, set the `TM_STATE_FILE_UPDATE_TIME_PERIOD` option to `0` and the `TM_STATE_FILE_UPDATE_FRAME_PERIOD` option to `360`.
 
 Some callbacks are now timed:
-* Time `onUnitComplete()` and `onUnitRenegade()` and `onSaveGame()` because they should be timed. FYI, `onUnitComplete()` wasn't being timed due to a typo in the function signature that was introduced in BWAPI 4.0.0 when the function signature changed. Also time `onUnitRenegade()` and `onSaveGame()` just for completeness, because it appears these callbacks had been overlooked when writing the timing logic in the original AIIDE implementation for 3.7.4. Note that `onSaveGame()` is only called after the file has been saved, so it the time taken to save the file is not counted.
+* Time `onUnitComplete()` and `onUnitRenegade()` and `onSaveGame()` because they should be timed. FYI, `onUnitComplete()` wasn't being timed due to a typo in the function signature that was introduced in BWAPI 4.0.0 when the function signature changed. Also time `onUnitRenegade()` and `onSaveGame()` just for completeness, because it appears these callbacks had been overlooked when writing the timing logic in the original StarcraftAITournamentManager TM implementation for 3.7.4. Note that the bot's `onSaveGame()` callback is only called after the file has been saved, so the time taken to save the file is not counted.
 
 Automatically un-pauses (resumes) the game
 * By default, automatically resumes the game whenever it is paused. Can be controlled via the `TM_AUTO_RESUME_GAME` option.
