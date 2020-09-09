@@ -13,7 +13,7 @@ class TMState
 public:
 
     std::vector<int> timeOutExceeded;
-    const std::string stateFileVer = "3.0.0";
+    const std::string stateFileVer = "3.0.1";
     std::string selfName;
     std::string enemyName;
     std::string selfRaceInit;
@@ -96,6 +96,8 @@ class TMAI : public BWAPI::AIModule
     int localSpeed = 0;
     int frameSkip = 0;
     int frameCountTimeoutsExceeded = 0;
+    int oldFrameCount = -1;
+    int numPrevEventsThisFrame = 0;
     bool gameOver = false;
     bool disableUserInput = true;
     bool disableUserInputLocalSpeed = true;
@@ -106,11 +108,13 @@ class TMAI : public BWAPI::AIModule
     bool drawGUI = true;
     bool autoObs = true;
     bool autoResumeGame = true;
+    bool eventTimesVaried = false;
 
 public:
 
     TMAI();
     virtual ~TMAI() noexcept;
+    virtual void updateFrameTimers();
     virtual void drawUnitInformation(int x, int y);
     virtual void drawTMSettings(int x, int y);
     virtual void drawGameTimer(int x, int y);

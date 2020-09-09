@@ -210,6 +210,47 @@ TMAI::~TMAI() noexcept
     }
 }
 
+void TMAI::updateFrameTimers()
+{
+    const int eventTime = BWAPI::Broodwar->getLastEventTime();
+    const int frameCount = BWAPI::Broodwar->getFrameCount();
+
+    // For a client bot, if the TM calls BWAPI v4.4.0's getLastEventTime() it
+    // returns the total time for all events for the current frame (not just
+    // for the last event), and it returns the same value regardless of which
+    // TM callback method (onUnitDiscover(), onFrame() etc) is calling
+    // getLastEventTime(). We don't want to count the same amount multiple
+    // times. So, we try to detect whether we should interpret the value as
+    // the total time for all events for that frame or just the time for the
+    // last event, by examining whether getLastEventTime() has ever returned
+    // different values during the same frame. For the frames before it is
+    // detected, we interpret it as meaning the total time for all events for
+    // that frame. Future versions of BWAPI might solve the problem for us,
+    // but for v4.4.0 at least, we use this workaround. BWAPI versions before
+    // v4.4.0 don't time client bots at all, so the workaround isn't needed
+    // in those versions.
+    if (frameCount != oldFrameCount)
+    {
+        frameTimes[frameCount] = eventTime;
+        numPrevEventsThisFrame = 1;
+        oldFrameCount = frameCount;
+    }
+    else
+    {
+        if (eventTimesVaried)
+        {
+            frameTimes[frameCount] += eventTime;
+        }
+        else if (eventTime != frameTimes[frameCount])
+        {
+            eventTimesVaried = true;
+            frameTimes[frameCount] = (frameTimes[frameCount] * numPrevEventsThisFrame) + eventTime;
+        }
+
+        ++numPrevEventsThisFrame;
+    }
+}
+
 void TMAI::onStart()
 {
     Broodwar->setGUI(drawGUI);
@@ -236,6 +277,8 @@ void TMAI::onStart()
 
     state.init();
 
+    updateFrameTimers();
+
     if (autoObs)
     {
         autoObserver.onStart();
@@ -257,11 +300,8 @@ void TMAI::onEnd(bool isWinner)
 
 void TMAI::onFrame()
 {
-    const int lastEventTime = BWAPI::Broodwar->getLastEventTime();
     const int frameCount = BWAPI::Broodwar->getFrameCount();
-
-    // Add the frame times for this frame.
-    frameTimes[frameCount] += lastEventTime;
+    updateFrameTimers();
 
     // If the user is not allowed to change some settings, we keep re-applying them,
     // in case the user changed something they are not allowed to by typing chat messages.
@@ -516,7 +556,7 @@ void TMAI::drawGameTimer(int x, int y)
 
 void TMAI::onSendText(std::string text)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onSendText(text);
@@ -525,7 +565,7 @@ void TMAI::onSendText(std::string text)
 
 void TMAI::onReceiveText(BWAPI::Player player, std::string text)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onReceiveText(player, text);
@@ -534,7 +574,7 @@ void TMAI::onReceiveText(BWAPI::Player player, std::string text)
 
 void TMAI::onPlayerLeft(BWAPI::Player player)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onPlayerLeft(player);
@@ -543,7 +583,7 @@ void TMAI::onPlayerLeft(BWAPI::Player player)
 
 void TMAI::onNukeDetect(BWAPI::Position target)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onNukeDetect(target);
@@ -552,7 +592,7 @@ void TMAI::onNukeDetect(BWAPI::Position target)
 
 void TMAI::onUnitDiscover(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitDiscover(unit);
@@ -561,7 +601,7 @@ void TMAI::onUnitDiscover(BWAPI::Unit unit)
 
 void TMAI::onUnitEvade(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitEvade(unit);
@@ -570,7 +610,7 @@ void TMAI::onUnitEvade(BWAPI::Unit unit)
 
 void TMAI::onUnitShow(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitShow(unit);
@@ -579,7 +619,7 @@ void TMAI::onUnitShow(BWAPI::Unit unit)
 
 void TMAI::onUnitHide(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitHide(unit);
@@ -588,7 +628,7 @@ void TMAI::onUnitHide(BWAPI::Unit unit)
 
 void TMAI::onUnitCreate(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitCreate(unit);
@@ -597,7 +637,7 @@ void TMAI::onUnitCreate(BWAPI::Unit unit)
 
 void TMAI::onUnitDestroy(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitDestroy(unit);
@@ -606,7 +646,7 @@ void TMAI::onUnitDestroy(BWAPI::Unit unit)
 
 void TMAI::onUnitMorph(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitMorph(unit);
@@ -615,7 +655,7 @@ void TMAI::onUnitMorph(BWAPI::Unit unit)
 
 void TMAI::onUnitComplete(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitComplete(unit);
@@ -624,7 +664,7 @@ void TMAI::onUnitComplete(BWAPI::Unit unit)
 
 void TMAI::onUnitRenegade(BWAPI::Unit unit)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onUnitRenegade(unit);
@@ -633,7 +673,7 @@ void TMAI::onUnitRenegade(BWAPI::Unit unit)
 
 void TMAI::onSaveGame(std::string gameName)
 {
-    frameTimes[BWAPI::Broodwar->getFrameCount()] += BWAPI::Broodwar->getLastEventTime();
+    updateFrameTimers();
     if (autoObs)
     {
         autoObserver.onSaveGame(gameName);
