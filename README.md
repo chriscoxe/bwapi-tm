@@ -59,7 +59,7 @@ Options:
 * Added some new options, and documented all options in the sample settings file (`tm_setting.ini`). All the new option names start with `TM_`, although the old-style option names are still recognized from the settings file. If desired, options in the (optional) settings file can be overridden by environment variables with the same name. Also added an optional `TM_SETTINGS_FILE` environment variable for the location to read a settings file from.
 
 Misc bugfixes:
-* Fixed a bug where the magic number 85714 was being used rather than a variable for the game frame limit.
+* Fixed a bug where the magic number 85714 was being used, rather than a variable for the game frame limit.
 
 Visual C++ project files:
 * Use environment variables such as `BWAPI_420` instead of `BWAPI_DIR` in the Visual C++ project files.
